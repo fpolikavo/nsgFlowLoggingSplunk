@@ -1,11 +1,14 @@
 ﻿using Microsoft.Azure.EventHubs;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Collections.Generic;
 
-namespace nsgFlowLoggingSplunk
+namespace nsgFunc
 {
     public partial class Util
     {

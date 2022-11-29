@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace nsgFlowLoggingSplunk
+namespace nsgFunc
 {
     public partial class Util
     {

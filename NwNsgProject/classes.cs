@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Formatting;
-using System;
-using System.Buffers;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Buffers;
+using Microsoft.CodeAnalysis.Formatting;
 
 class SplunkEventMessage
 {
@@ -17,7 +13,7 @@ class SplunkEventMessage
     public double time { get; set; }
     public DenormalizedRecord @event { get; set; }
 
-    public SplunkEventMessage(DenormalizedRecord splunkEvent)
+    public SplunkEventMessage (DenormalizedRecord splunkEvent)
     {
         sourcetype = "amdl:nsg:flowlogs";
         time = unixTime(splunkEvent.time);
@@ -26,7 +22,7 @@ class SplunkEventMessage
 
     double unixTime(string time)
     {
-        DateTime t = DateTime.ParseExact(time, "yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
+        DateTime t = DateTime.ParseExact(time,"yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
 
         double unixTimestamp = t.Ticks - new DateTime(1970, 1, 1).Ticks;
         unixTimestamp /= TimeSpan.TicksPerSecond;
@@ -91,6 +87,7 @@ class DenormalizedRecord
         this.destinationAddress = tuple.destinationAddress;
         this.sourcePort = tuple.sourcePort;
         this.destinationPort = tuple.destinationPort;
+        this.transportProtocol = tuple.transportProtocol;
         this.deviceDirection = tuple.deviceDirection;
         this.deviceAction = tuple.deviceAction;
         if (this.version >= 2.0)
@@ -231,8 +228,7 @@ class DenormalizedRecord
                 Buffer.BlockCopy(crlf, 0, buffer, s.Length, 2);
 
                 Buffer.BlockCopy(buffer, 0, transmission, offset, bytesToAppend);
-            }
-            else
+            } else
             {
                 throw new System.IO.InternalBufferOverflowException("ArcSight transmission buffer overflow");
             }
@@ -267,6 +263,7 @@ class DenormalizedRecord
         objectSize += this.destinationPort.Length + 15 + 6;
         objectSize += this.deviceDirection.Length + 15 + 6;
         objectSize += this.deviceAction.Length + 12 + 6;
+        objectSize += this.transportProtocol.Length + 17 + 6;
         if (this.version >= 2.0)
         {
             objectSize += this.flowState.Length + 9 + 6;

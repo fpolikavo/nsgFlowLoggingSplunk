@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis.Formatting;
+﻿using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -9,8 +9,9 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Formatting;
 
-namespace nsgFlowLoggingSplunk
+namespace nsgFunc
 {
     public partial class Util
     {

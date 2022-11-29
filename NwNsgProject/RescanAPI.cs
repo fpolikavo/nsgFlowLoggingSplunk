@@ -1,16 +1,16 @@
-using Microsoft.AspNetCore.Http;
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Storage.Blob;
 using Microsoft.Azure.Cosmos.Table;
-using System;
-using System.Threading.Tasks;
 
-namespace nsgFlowLoggingSplunk
+namespace nsgFunc
 {
-    public static class RescanAPI
+  public static class RescanAPI
     {
         // https://<APP_NAME>.azurewebsites.net/api/rescan/2/17/8
         //
@@ -57,8 +57,7 @@ namespace nsgFlowLoggingSplunk
             try
             {
                 CloudTable CheckpointTable = await checkpointsBinder.BindAsync<CloudTable>(tableAttributes);
-                TableOperation getOperation = TableOperation.Retrieve<Checkpoint>(blobDetails.GetPartitionKey(),
-                                                                                  blobDetails.GetRowKey());
+                TableOperation getOperation = TableOperation.Retrieve<Checkpoint>(blobDetails.GetPartitionKey(), blobDetails.GetRowKey());
                 TableResult result = await CheckpointTable.ExecuteAsync(getOperation);
                 Checkpoint c = (Checkpoint)result.Result;
                 c.CheckpointIndex = 1;
